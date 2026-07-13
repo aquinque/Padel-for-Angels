@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { getDictionary, LOCALES, type Locale } from "@/i18n/dictionaries";
 
@@ -18,6 +19,14 @@ export default async function HomePage({
     <div>
       <section className="bg-gradient-to-b from-court-light to-paper">
         <div className="container-page flex flex-col items-center gap-6 py-20 text-center">
+          <Image
+            src="/images/tierras-angels-logo.png"
+            alt="Tierra's Angels"
+            width={900}
+            height={1025}
+            className="h-20 w-auto sm:h-24"
+            priority
+          />
           <span className="rounded-full bg-court/10 px-4 py-1 text-sm font-semibold text-court-dark">
             {dict.home.heroKicker}
           </span>
