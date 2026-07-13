@@ -9,15 +9,23 @@ import {
   updateRegistrationStatus,
   type SubmissionStatus,
 } from "@/app/admin/actions";
+import { teamDisplayName, teamFlag } from "@/lib/countries";
+
+interface TeamRef {
+  name: string;
+  country_code: string | null;
+}
 
 export interface RegistrationRow {
   id: string;
   created_at: string;
+  registration_type: "team" | "solo";
   team_name: string | null;
+  teams: TeamRef | null;
   player1_name: string;
   player1_email: string;
   player1_phone: string;
-  player2_name: string;
+  player2_name: string | null;
   player2_email: string | null;
   player2_phone: string | null;
   category: string | null;
@@ -38,6 +46,16 @@ export interface DonationRow {
   message: string | null;
   proof_path: string | null;
   status: SubmissionStatus;
+  for_team_id: string | null;
+  teams: TeamRef | null;
+}
+
+export interface FundraisingRow {
+  team_id: string;
+  team_name: string;
+  country_code: string | null;
+  amount_raised: number;
+  donation_count: number;
 }
 
 const STATUS_LABEL: Record<SubmissionStatus, string> = {
@@ -130,12 +148,14 @@ function StatusActions({
 export function AdminDashboard({
   registrations,
   donations,
+  fundraising,
 }: {
   registrations: RegistrationRow[];
   donations: DonationRow[];
+  fundraising: FundraisingRow[];
 }) {
   const router = useRouter();
-  const [tab, setTab] = useState<"registrations" | "donations">("registrations");
+  const [tab, setTab] = useState<"registrations" | "donations" | "fundraising">("registrations");
   const [regs, setRegs] = useState(registrations);
   const [dons, setDons] = useState(donations);
 
@@ -190,14 +210,23 @@ export function AdminDashboard({
           >
             Dons ({dons.length})
           </button>
+          <button
+            onClick={() => setTab("fundraising")}
+            className={`rounded-full px-4 py-2 text-sm font-semibold ${
+              tab === "fundraising" ? "bg-court text-white" : "bg-white text-ink/60"
+            }`}
+          >
+            Cagnotte des équipes
+          </button>
         </div>
 
         {tab === "registrations" && (
           <div className="mt-6 overflow-x-auto rounded-2xl border border-black/5 bg-white">
-            <table className="w-full min-w-[900px] text-left text-sm">
+            <table className="w-full min-w-[1000px] text-left text-sm">
               <thead className="border-b border-black/5 text-xs uppercase text-ink/50">
                 <tr>
                   <th className="px-4 py-3">Date</th>
+                  <th className="px-4 py-3">Type</th>
                   <th className="px-4 py-3">Équipe</th>
                   <th className="px-4 py-3">Joueur 1</th>
                   <th className="px-4 py-3">Joueur 2</th>
@@ -211,7 +240,7 @@ export function AdminDashboard({
               <tbody>
                 {regs.length === 0 && (
                   <tr>
-                    <td colSpan={9} className="px-4 py-6 text-center text-ink/40">
+                    <td colSpan={10} className="px-4 py-6 text-center text-ink/40">
                       Rien pour l&apos;instant.
                     </td>
                   </tr>
@@ -221,16 +250,43 @@ export function AdminDashboard({
                     <td className="px-4 py-3 whitespace-nowrap text-ink/60">
                       {new Date(r.created_at).toLocaleString("fr-FR")}
                     </td>
-                    <td className="px-4 py-3">{r.team_name || "—"}</td>
+                    <td className="px-4 py-3">
+                      <span
+                        className={`rounded-full px-2.5 py-1 text-xs font-semibold ${
+                          r.registration_type === "solo"
+                            ? "bg-sun/20 text-amber-800"
+                            : "bg-court/15 text-court-dark"
+                        }`}
+                      >
+                        {r.registration_type === "solo" ? "Solo" : "Équipe"}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3">
+                      {r.teams ? (
+                        <span>
+                          {teamFlag(r.teams.country_code)} {teamDisplayName(r.teams, "fr")}
+                        </span>
+                      ) : r.registration_type === "solo" ? (
+                        <span className="text-xs text-ink/40">En attente de partenaire</span>
+                      ) : (
+                        r.team_name || "—"
+                      )}
+                    </td>
                     <td className="px-4 py-3">
                       <p className="font-medium">{r.player1_name}</p>
                       <p className="text-xs text-ink/50">{r.player1_email}</p>
                       <p className="text-xs text-ink/50">{r.player1_phone}</p>
                     </td>
                     <td className="px-4 py-3">
-                      <p className="font-medium">{r.player2_name}</p>
-                      <p className="text-xs text-ink/50">{r.player2_email}</p>
-                      <p className="text-xs text-ink/50">{r.player2_phone}</p>
+                      {r.player2_name ? (
+                        <>
+                          <p className="font-medium">{r.player2_name}</p>
+                          <p className="text-xs text-ink/50">{r.player2_email}</p>
+                          <p className="text-xs text-ink/50">{r.player2_phone}</p>
+                        </>
+                      ) : (
+                        <span className="text-xs text-ink/40">—</span>
+                      )}
                     </td>
                     <td className="px-4 py-3 whitespace-nowrap">
                       {r.amount_declared ?? r.amount_due} €
@@ -257,11 +313,12 @@ export function AdminDashboard({
 
         {tab === "donations" && (
           <div className="mt-6 overflow-x-auto rounded-2xl border border-black/5 bg-white">
-            <table className="w-full min-w-[700px] text-left text-sm">
+            <table className="w-full min-w-[800px] text-left text-sm">
               <thead className="border-b border-black/5 text-xs uppercase text-ink/50">
                 <tr>
                   <th className="px-4 py-3">Date</th>
                   <th className="px-4 py-3">Donateur</th>
+                  <th className="px-4 py-3">Pour</th>
                   <th className="px-4 py-3">Montant</th>
                   <th className="px-4 py-3">Message</th>
                   <th className="px-4 py-3">Preuve</th>
@@ -272,7 +329,7 @@ export function AdminDashboard({
               <tbody>
                 {dons.length === 0 && (
                   <tr>
-                    <td colSpan={7} className="px-4 py-6 text-center text-ink/40">
+                    <td colSpan={8} className="px-4 py-6 text-center text-ink/40">
                       Rien pour l&apos;instant.
                     </td>
                   </tr>
@@ -285,6 +342,15 @@ export function AdminDashboard({
                     <td className="px-4 py-3">
                       <p className="font-medium">{d.donor_name || "Anonyme"}</p>
                       <p className="text-xs text-ink/50">{d.donor_email}</p>
+                    </td>
+                    <td className="px-4 py-3">
+                      {d.teams ? (
+                        <span>
+                          {teamFlag(d.teams.country_code)} {teamDisplayName(d.teams, "fr")}
+                        </span>
+                      ) : (
+                        <span className="text-xs text-ink/40">Don général</span>
+                      )}
                     </td>
                     <td className="px-4 py-3 whitespace-nowrap">
                       {d.amount_declared != null ? `${d.amount_declared} €` : "—"}
@@ -301,6 +367,43 @@ export function AdminDashboard({
                         status={d.status}
                         onChange={(s) => handleDonStatus(d.id, s)}
                       />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+
+        {tab === "fundraising" && (
+          <div className="mt-6 overflow-x-auto rounded-2xl border border-black/5 bg-white">
+            <table className="w-full min-w-[500px] text-left text-sm">
+              <thead className="border-b border-black/5 text-xs uppercase text-ink/50">
+                <tr>
+                  <th className="px-4 py-3">#</th>
+                  <th className="px-4 py-3">Équipe</th>
+                  <th className="px-4 py-3">Dons confirmés</th>
+                  <th className="px-4 py-3">Fonds levés</th>
+                </tr>
+              </thead>
+              <tbody>
+                {fundraising.length === 0 && (
+                  <tr>
+                    <td colSpan={4} className="px-4 py-6 text-center text-ink/40">
+                      Rien pour l&apos;instant.
+                    </td>
+                  </tr>
+                )}
+                {fundraising.map((row, index) => (
+                  <tr key={row.team_id} className="border-b border-black/5">
+                    <td className="px-4 py-3 text-ink/50">{index + 1}</td>
+                    <td className="px-4 py-3 font-medium">
+                      {teamFlag(row.country_code)}{" "}
+                      {teamDisplayName({ name: row.team_name, country_code: row.country_code }, "fr")}
+                    </td>
+                    <td className="px-4 py-3">{row.donation_count}</td>
+                    <td className="px-4 py-3 font-bold text-court-dark">
+                      {Number(row.amount_raised).toFixed(0)} €
                     </td>
                   </tr>
                 ))}

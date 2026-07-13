@@ -8,9 +8,11 @@ Construit avec Next.js (App Router) + TypeScript + Tailwind CSS, et Supabase (ba
 
 - Site bilingue FR / ES (`/fr`, `/es`) avec sélecteur de langue.
 - Page tournoi (infos à compléter), page fondation (contenu Tierra's Angels), accueil.
-- **Inscription** : formulaire équipe → instructions de paiement Bizum → référence + preuve de paiement (optionnelle) → enregistrement en base avec statut `pending`.
-- **Don libre** : mêmes coordonnées Bizum, formulaire optionnel (nom, montant, message, preuve).
-- **Back-office admin** (`/admin`) : connexion Supabase Auth, liste des inscriptions/dons, confirmation manuelle du statut (`pending` / `confirmed` / `rejected`), visualisation des preuves de paiement (URL signée temporaire).
+- **Inscription en équipe** : formulaire binôme → instructions de paiement Bizum → référence + preuve de paiement (optionnelle) → enregistrement en base avec statut `pending`.
+- **Inscription solo** : un joueur ou une joueuse sans partenaire peut s'inscrire seul(e) (20 €). Dès qu'un deuxième joueur solo s'inscrit, les deux sont **associés automatiquement** en équipe par un déclencheur en base de données, qui leur attribue le nom d'un pays de coupe du monde (ex : « Brésil », « Argentine »...).
+- **Cagnotte des équipes** (`/cagnotte`) : un mini-tournoi de collecte de fonds où chaque équipe (inscrite en binôme ou formée par appariement solo) a sa propre page de classement. N'importe qui peut choisir une équipe et lui envoyer un don par Bizum ; un classement public affiche les fonds levés par équipe (uniquement les dons confirmés par l'admin).
+- **Don libre** : mêmes coordonnées Bizum, formulaire optionnel (nom, montant, message, preuve), non attribué à une équipe.
+- **Back-office admin** (`/admin`) : connexion Supabase Auth, liste des inscriptions (équipe/solo, avec l'équipe assignée) et des dons (généraux ou attribués à une équipe), confirmation manuelle du statut (`pending` / `confirmed` / `rejected`), visualisation des preuves de paiement (URL signée temporaire), et un onglet classement de la cagnotte des équipes.
 
 ## Pourquoi une confirmation manuelle ?
 
@@ -59,12 +61,17 @@ Ces valeurs sont visibles dans le dashboard Supabase du projet (**Project Settin
 
 Tables Supabase (schéma `public`) :
 
-- `registrations` — une ligne par équipe inscrite (joueurs, catégorie, montant, référence Bizum, chemin de la preuve, statut).
-- `donations` — une ligne par don libre (donateur optionnel, montant, message, preuve, statut).
+- `teams` — une équipe : soit créée directement (inscription en binôme, `name` = nom choisi), soit auto-formée par appariement de deux joueurs solo (`source = 'solo_pairing'`, `country_code` = code pays attribué).
+- `registrations` — une ligne par inscription. `registration_type` vaut `team` (les deux joueurs sont dans la même ligne) ou `solo` (un joueur par ligne, `team_id` rempli automatiquement dès qu'un partenaire est trouvé).
+- `donations` — un don, général (`for_team_id` vide) ou attribué à une équipe dans la cagnotte (`for_team_id` rempli).
+
+Un **déclencheur** (`pair_solo_registration`) s'exécute à chaque inscription solo : il cherche un autre joueur solo en attente, crée une équipe avec le prochain nom de pays disponible (liste de 48 pays dans `src/lib/countries.ts`, à synchroniser avec la fonction SQL si tu la modifies), et lie les deux inscriptions à cette équipe.
+
+Une fonction `get_team_fundraising()` (SECURITY DEFINER) expose au public un classement agrégé (équipe, montant levé, nombre de dons confirmés) sans exposer les données personnelles des donateurs.
 
 Bucket de stockage privé `payment-proofs` pour les captures d'écran/justificatifs de paiement (upload public, lecture réservée aux admins connectés via URL signée).
 
-La sécurité au niveau des lignes (RLS) autorise tout le monde à **insérer** une inscription/don, mais seuls les utilisateurs authentifiés (les admins) peuvent **lire** et **modifier** les statuts.
+La sécurité au niveau des lignes (RLS) autorise tout le monde à **insérer** une inscription/don/équipe et à **lire** la liste des équipes (nécessaire pour la cagnotte publique), mais seuls les utilisateurs authentifiés (les admins) peuvent **lire** les inscriptions/dons (données personnelles) et **modifier** les statuts.
 
 ## Déploiement
 

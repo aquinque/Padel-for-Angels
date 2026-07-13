@@ -12,6 +12,7 @@ export function SiteHeader({ locale, dict }: { locale: Locale; dict: Dictionary 
     { href: `/${locale}`, label: dict.nav.home },
     { href: `/${locale}/tournoi`, label: dict.nav.tournament },
     { href: `/${locale}/fondation`, label: dict.nav.foundation },
+    { href: `/${locale}/cagnotte`, label: dict.nav.fundraising },
     { href: `/${locale}/don`, label: dict.nav.donate },
   ];
 

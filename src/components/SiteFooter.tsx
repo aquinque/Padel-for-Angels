@@ -21,6 +21,9 @@ export function SiteFooter({ locale, dict }: { locale: Locale; dict: Dictionary 
           <Link href={`/${locale}/inscription`} className="hover:text-court-dark">
             {dict.nav.register}
           </Link>
+          <Link href={`/${locale}/cagnotte`} className="hover:text-court-dark">
+            {dict.nav.fundraising}
+          </Link>
           <Link href={`/${locale}/don`} className="hover:text-court-dark">
             {dict.nav.donate}
           </Link>

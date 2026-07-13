@@ -13,6 +13,7 @@ export interface Dictionary {
     foundation: string;
     register: string;
     donate: string;
+    fundraising: string;
   };
   common: {
     tbd: string;
@@ -32,6 +33,9 @@ export interface Dictionary {
     aboutFoundationTitle: string;
     aboutFoundationBody: string;
     aboutFoundationLink: string;
+    aboutFundraisingTitle: string;
+    aboutFundraisingBody: string;
+    aboutFundraisingLink: string;
     howItWorksTitle: string;
     steps: { title: string; body: string }[];
   };
@@ -63,6 +67,11 @@ export interface Dictionary {
   register: {
     title: string;
     intro: string;
+    modeLabel: string;
+    modeTeam: string;
+    modeTeamDesc: string;
+    modeSolo: string;
+    modeSoloDesc: string;
     formTitle: string;
     fields: {
       teamName: string;
@@ -88,6 +97,47 @@ export interface Dictionary {
     proofLabel: string;
     proofHelp: string;
     confirmSubmit: string;
+    successTitle: string;
+    successBody: string;
+    errorTitle: string;
+    errorBody: string;
+    soloFormTitle: string;
+    soloFields: {
+      name: string;
+      email: string;
+      phone: string;
+      category: string;
+      categoryPlaceholder: string;
+      amount: string;
+      message: string;
+      messagePlaceholder: string;
+    };
+    soloPriceNote: string;
+    soloPairingNote: string;
+    soloSuccessTitle: string;
+    soloSuccessBody: string;
+  };
+  fundraising: {
+    title: string;
+    intro: string;
+    leaderboardTitle: string;
+    leaderboardEmpty: string;
+    teamColumn: string;
+    amountColumn: string;
+    formTitle: string;
+    fields: {
+      team: string;
+      teamPlaceholder: string;
+      name: string;
+      email: string;
+      amount: string;
+      message: string;
+      messagePlaceholder: string;
+    };
+    proofLabel: string;
+    proofHelp: string;
+    submit: string;
+    submitting: string;
     successTitle: string;
     successBody: string;
     errorTitle: string;
@@ -164,6 +214,7 @@ const fr: Dictionary = {
     foundation: "La fondation",
     register: "S'inscrire",
     donate: "Faire un don",
+    fundraising: "Cagnotte des équipes",
   },
   common: {
     tbd: "À confirmer",
@@ -186,6 +237,10 @@ const fr: Dictionary = {
     aboutFoundationBody:
       "Tierra's Angels est une fondation familiale à but non lucratif qui soutient des enfants et des familles au Pérou, en Haïti et à Los Angeles, à travers l'accès aux soins, à l'éducation et à l'alimentation.",
     aboutFoundationLink: "Découvrir la fondation",
+    aboutFundraisingTitle: "Cagnotte des équipes",
+    aboutFundraisingBody:
+      "Un tournoi dans le tournoi : chaque équipe concourt pour lever le plus de fonds possible. Choisis ton équipe préférée et soutiens-la par Bizum.",
+    aboutFundraisingLink: "Voir le classement",
     howItWorksTitle: "Comment participer",
     steps: [
       {
@@ -256,7 +311,13 @@ const fr: Dictionary = {
   register: {
     title: "Inscription au tournoi",
     intro:
-      "Inscris ton équipe en quelques minutes. L'inscription est confirmée après réception et vérification du paiement Bizum.",
+      "Inscris-toi en quelques minutes, en équipe ou seul(e). L'inscription est confirmée après réception et vérification du paiement Bizum.",
+    modeLabel: "Comment veux-tu t'inscrire ?",
+    modeTeam: "En équipe",
+    modeTeamDesc: "Tu as déjà un binôme : inscrivez-vous ensemble.",
+    modeSolo: "Seul(e)",
+    modeSoloDesc:
+      "Pas encore de partenaire ? Inscris-toi seul(e), on te trouve un coéquipier automatiquement.",
     formTitle: "Informations de l'équipe",
     fields: {
       teamName: "Nom de l'équipe (optionnel)",
@@ -291,6 +352,52 @@ const fr: Dictionary = {
     errorTitle: "Une erreur est survenue",
     errorBody:
       "Ta demande n'a pas pu être envoyée. Vérifie ta connexion et réessaie, ou contacte-nous directement.",
+    soloFormTitle: "Tes informations",
+    soloFields: {
+      name: "Nom complet",
+      email: "Email",
+      phone: "Téléphone",
+      category: "Niveau / catégorie",
+      categoryPlaceholder: "Ex : loisir, intermédiaire, confirmé",
+      amount: "Montant réglé (€)",
+      message: "Message (optionnel)",
+      messagePlaceholder: "Une info à nous communiquer ? Un partenaire de niveau similaire souhaité ?",
+    },
+    soloPriceNote:
+      "20 € par joueur. Tu peux aussi choisir de régler plus pour soutenir davantage Tierra's Angels !",
+    soloPairingNote:
+      "Dès qu'un autre joueur ou une autre joueuse s'inscrit seul(e), vous serez associés automatiquement en équipe, avec un nom de pays de coupe du monde. Retrouve ton équipe sur la page « Cagnotte des équipes » une fois les paiements confirmés.",
+    soloSuccessTitle: "Inscription envoyée !",
+    soloSuccessBody:
+      "Merci ! Ton inscription est enregistrée avec le statut « en attente ». Tu seras associé(e) automatiquement à un autre joueur ou une autre joueuse solo pour former une équipe, dès que ton paiement Bizum aura été vérifié.",
+  },
+  fundraising: {
+    title: "Cagnotte des équipes",
+    intro:
+      "Un tournoi dans le tournoi ! Chaque équipe inscrite concourt pour lever le plus de fonds possible pour Tierra's Angels. Choisis une équipe et soutiens-la en lui envoyant un don par Bizum.",
+    leaderboardTitle: "Classement des équipes",
+    leaderboardEmpty: "Aucune équipe pour l'instant — reviens bientôt !",
+    teamColumn: "Équipe",
+    amountColumn: "Fonds levés",
+    formTitle: "Soutenir une équipe",
+    fields: {
+      team: "Équipe à soutenir",
+      teamPlaceholder: "Choisis une équipe",
+      name: "Ton nom (optionnel)",
+      email: "Email (optionnel)",
+      amount: "Montant du don (€)",
+      message: "Message (optionnel)",
+      messagePlaceholder: "Un mot d'encouragement pour l'équipe ?",
+    },
+    proofLabel: "Capture d'écran du paiement (optionnel)",
+    proofHelp: "Formats acceptés : JPG, PNG, PDF — 5 Mo max.",
+    submit: "Envoyer mon soutien",
+    submitting: "Envoi en cours…",
+    successTitle: "Merci pour ton soutien !",
+    successBody:
+      "Ton don est enregistré pour cette équipe. Il apparaîtra dans le classement une fois confirmé.",
+    errorTitle: "Une erreur est survenue",
+    errorBody: "Ton don n'a pas pu être envoyé. Vérifie ta connexion et réessaie.",
   },
   donate: {
     title: "Faire un don",
@@ -373,6 +480,7 @@ const es: Dictionary = {
     foundation: "La fundación",
     register: "Inscribirse",
     donate: "Donar",
+    fundraising: "Recaudación de equipos",
   },
   common: {
     tbd: "Por confirmar",
@@ -395,6 +503,10 @@ const es: Dictionary = {
     aboutFoundationBody:
       "Tierra's Angels es una fundación familiar sin ánimo de lucro que apoya a niños y familias en Perú, Haití y Los Ángeles, dando acceso a salud, educación y alimentación.",
     aboutFoundationLink: "Conocer la fundación",
+    aboutFundraisingTitle: "Recaudación de equipos",
+    aboutFundraisingBody:
+      "¡Un torneo dentro del torneo! Cada equipo compite por recaudar la mayor cantidad posible. Elige tu equipo favorito y apóyalo por Bizum.",
+    aboutFundraisingLink: "Ver la clasificación",
     howItWorksTitle: "Cómo participar",
     steps: [
       {
@@ -464,7 +576,13 @@ const es: Dictionary = {
   register: {
     title: "Inscripción al torneo",
     intro:
-      "Inscribe a tu equipo en pocos minutos. La inscripción se confirma tras recibir y verificar el pago por Bizum.",
+      "Inscríbete en pocos minutos, en equipo o en solitario. La inscripción se confirma tras recibir y verificar el pago por Bizum.",
+    modeLabel: "¿Cómo quieres inscribirte?",
+    modeTeam: "En equipo",
+    modeTeamDesc: "Ya tienes pareja: inscribíos juntos.",
+    modeSolo: "En solitario",
+    modeSoloDesc:
+      "¿Aún no tienes compañero/a? Inscríbete solo/a, te buscamos uno automáticamente.",
     formTitle: "Datos del equipo",
     fields: {
       teamName: "Nombre del equipo (opcional)",
@@ -499,6 +617,52 @@ const es: Dictionary = {
     errorTitle: "Ha ocurrido un error",
     errorBody:
       "No se pudo enviar tu solicitud. Comprueba tu conexión e inténtalo de nuevo, o contáctanos directamente.",
+    soloFormTitle: "Tus datos",
+    soloFields: {
+      name: "Nombre completo",
+      email: "Email",
+      phone: "Teléfono",
+      category: "Nivel / categoría",
+      categoryPlaceholder: "Ej: iniciación, intermedio, avanzado",
+      amount: "Importe pagado (€)",
+      message: "Mensaje (opcional)",
+      messagePlaceholder: "¿Algo que quieras contarnos? ¿Un compañero de nivel similar?",
+    },
+    soloPriceNote:
+      "20 € por jugador. ¡También puedes pagar más para apoyar aún más a Tierra's Angels!",
+    soloPairingNote:
+      "En cuanto se inscriba otro jugador o jugadora en solitario, os asociaremos automáticamente en un equipo, con el nombre de un país del mundial. Consulta tu equipo en la página «Recaudación de equipos» una vez confirmados los pagos.",
+    soloSuccessTitle: "¡Inscripción enviada!",
+    soloSuccessBody:
+      "¡Gracias! Tu inscripción queda registrada con estado «pendiente». Te asociaremos automáticamente con otro jugador o jugadora en solitario para formar un equipo, en cuanto se verifique tu pago por Bizum.",
+  },
+  fundraising: {
+    title: "Recaudación de equipos",
+    intro:
+      "¡Un torneo dentro del torneo! Cada equipo inscrito compite por recaudar la mayor cantidad posible para Tierra's Angels. Elige un equipo y apóyalo enviándole una donación por Bizum.",
+    leaderboardTitle: "Clasificación de equipos",
+    leaderboardEmpty: "Todavía no hay equipos — ¡vuelve pronto!",
+    teamColumn: "Equipo",
+    amountColumn: "Fondos recaudados",
+    formTitle: "Apoyar a un equipo",
+    fields: {
+      team: "Equipo a apoyar",
+      teamPlaceholder: "Elige un equipo",
+      name: "Tu nombre (opcional)",
+      email: "Email (opcional)",
+      amount: "Importe de la donación (€)",
+      message: "Mensaje (opcional)",
+      messagePlaceholder: "¿Unas palabras de ánimo para el equipo?",
+    },
+    proofLabel: "Captura de pantalla del pago (opcional)",
+    proofHelp: "Formatos aceptados: JPG, PNG, PDF — máx. 5 MB.",
+    submit: "Enviar mi apoyo",
+    submitting: "Enviando…",
+    successTitle: "¡Gracias por tu apoyo!",
+    successBody:
+      "Tu donación queda registrada para este equipo. Aparecerá en la clasificación una vez confirmada.",
+    errorTitle: "Ha ocurrido un error",
+    errorBody: "No se pudo enviar tu donación. Comprueba tu conexión e inténtalo de nuevo.",
   },
   donate: {
     title: "Hacer una donación",

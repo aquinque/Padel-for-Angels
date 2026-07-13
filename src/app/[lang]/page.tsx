@@ -42,7 +42,7 @@ export default async function HomePage({
         </div>
       </section>
 
-      <section className="container-page grid gap-6 py-16 md:grid-cols-2">
+      <section className="container-page grid gap-6 py-16 md:grid-cols-3">
         <div className="rounded-3xl border border-black/5 bg-white p-8 shadow-sm">
           <h2 className="text-xl font-bold text-court-dark">{dict.home.aboutTournamentTitle}</h2>
           <p className="mt-3 text-ink/70">{dict.home.aboutTournamentBody}</p>
@@ -61,6 +61,16 @@ export default async function HomePage({
             className="mt-4 inline-block text-sm font-semibold text-coral hover:underline"
           >
             {dict.home.aboutFoundationLink} →
+          </Link>
+        </div>
+        <div className="rounded-3xl border border-black/5 bg-white p-8 shadow-sm">
+          <h2 className="text-xl font-bold text-court-dark">{dict.home.aboutFundraisingTitle}</h2>
+          <p className="mt-3 text-ink/70">{dict.home.aboutFundraisingBody}</p>
+          <Link
+            href={`/${locale}/cagnotte`}
+            className="mt-4 inline-block text-sm font-semibold text-coral hover:underline"
+          >
+            {dict.home.aboutFundraisingLink} →
           </Link>
         </div>
       </section>
