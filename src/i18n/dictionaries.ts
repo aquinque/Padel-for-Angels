@@ -14,6 +14,7 @@ export interface Dictionary {
     register: string;
     donate: string;
     fundraising: string;
+    supportedBy: string;
   };
   common: {
     tbd: string;
@@ -215,6 +216,7 @@ const fr: Dictionary = {
     register: "S'inscrire",
     donate: "Faire un don",
     fundraising: "Cagnotte des équipes",
+    supportedBy: "Au profit de Tierra's Angels",
   },
   common: {
     tbd: "À confirmer",
@@ -481,6 +483,7 @@ const es: Dictionary = {
     register: "Inscribirse",
     donate: "Donar",
     fundraising: "Recaudación de equipos",
+    supportedBy: "A beneficio de Tierra's Angels",
   },
   common: {
     tbd: "Por confirmar",

@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { getDictionary, LOCALES, type Locale } from "@/i18n/dictionaries";
 import { FOUNDATION_URL } from "@/lib/config";
@@ -18,7 +19,15 @@ export default async function FoundationPage({
 
   return (
     <div className="container-page py-16">
-      <h1 className="text-3xl font-extrabold text-court-dark sm:text-4xl">{f.title}</h1>
+      <Image
+        src="/images/tierras-angels-logo.png"
+        alt="Tierra's Angels"
+        width={900}
+        height={1025}
+        className="h-32 w-auto sm:h-40"
+        priority
+      />
+      <h1 className="mt-6 text-3xl font-extrabold text-court-dark sm:text-4xl">{f.title}</h1>
       <p className="mt-4 max-w-2xl text-ink/70">{f.intro}</p>
 
       <div className="mt-10 grid gap-6 md:grid-cols-2">
